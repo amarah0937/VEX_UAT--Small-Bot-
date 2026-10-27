@@ -1,0 +1,60 @@
+This establishes a serial communication channel. You can use standard input/output (stdio) 
+or Python's pyserial library on the Raspberry Pi to send and receive data 
+from a program running on the V5 Brain.
+
+GPIO pins
+RS-485
+Serial Communication
+Modbus RTU, BACnet, or Profibus
+
+Data format: Start bit, data, stop bit
+Asynchronous (Baud Rate)
+Half-Duplex or Full-duplex
+
+//
+https://github.com/outpaddling/OpenVex
+
+// Arduino code example for serial communication
+https://github.com/BCUZRobotics/Custom-Electronics-Example/blob/master/Arduino%20Code/TeensyCode/TeensyCode.ino
+
+// V5 Smart Port as Generic Serial Device (PROS)
+https://www.vexforum.com/t/use-v5-smart-port-as-generic-serial-device-pros/57821/9
+
+// GPS Forum
+https://www.vexforum.com/t/gps-v5-robot/83219
+
+// Pi to Brain
+https://www.vexforum.com/t/rapsberry-pi-to-vex-bidirectional-communication/85696/2 
+
+// AI
+https://kb.vex.com/hc/en-us/articles/360049619171-Coding-the-VEX-AI-Robot 
+
+
+To do:
+
+Code for brain to send recieved info to pi
+    Collect distance, velocity, object size, & confidence level
+
+    #include "robot-config.h"
+    #include <stdio.h>
+
+    using namespace vex;
+
+    int main() {
+    // Open standard output streaming to communicate through the micro-USB port
+    FILE *usb_out = fopen("/dev/stdout", "w");
+
+    while(1) {
+        if (usb_out != NULL) {
+            // Read native sensor data fields
+
+            // Package data into a structured NMEA-style telemetry packet frame
+            fprintf(usb_out, "$DIST,%.1f,%.2f\n", dist, velocity);
+            fflush(usb_out); 
+        }
+        // Stream at ~50Hz
+        this_thread::sleep_for(20);
+    }
+}
+
+Code for pi to send output back through serial communication
